@@ -22,3 +22,9 @@ Run this command and paste in your new token:
 This will create a file called `auth.json` in your current directory containing the required value. To save the file at a different path or filename, use the `--auth=myauth.json` option.
 
 As an alternative to using an `auth.json` file you can add your access token to an environment variable called `CIRCLECI_TOKEN`.
+
+## Fetching projects for the current user
+
+The `projects` command retrieves all of the projects for the current user.
+
+    $ circleci-to-sqlite projects circleci.db

@@ -1,7 +1,9 @@
 import click
 import json
+import os
 import pathlib
 import sqlite_utils
+from . import utils
 
 
 @click.group()
@@ -29,3 +31,36 @@ def auth(auth):
         auth_data = {}
     auth_data["circleci_personal_token"] = personal_token
     open(auth, "w").write(json.dumps(auth_data, indent=4) + "\n")
+
+
+@cli.command()
+@click.argument(
+    "db_path",
+    type=click.Path(file_okay=True, dir_okay=False, allow_dash=False),
+    required=True,
+)
+@click.option(
+    "-a",
+    "--auth",
+    type=click.Path(file_okay=True, dir_okay=False, allow_dash=True),
+    default="auth.json",
+    help="Path to auth.json token file",
+)
+def projects(db_path, auth):
+    "Save all projects for the current user"
+    db = sqlite_utils.Database(db_path)
+    token = load_token(auth)
+    projects = utils.fetch_projects(token)
+    utils.save_projects(db, projects)
+    utils.ensure_db_shape(db)
+
+
+def load_token(auth):
+    try:
+        token = json.load(open(auth))["circleci_personal_token"]
+    except (KeyError, FileNotFoundError):
+        token = None
+    if token is None:
+        # Fallback to CIRCLECI_TOKEN environment variable
+        token = os.environ.get("CIRCLECI_TOKEN") or None
+    return token
