@@ -1,9 +1,9 @@
 # circleci-to-sqlite
 
 [![PyPI](https://img.shields.io/pypi/v/circleci-to-sqlite.svg)](https://pypi.org/project/circleci-to-sqlite/)
-[![Changelog](https://img.shields.io/circleci/v/release/seem/circleci-to-sqlite?include_prereleases&label=changelog)](https://circleci.com/seem/circleci-to-sqlite/releases)
-[![Tests](https://circleci.com/seem/circleci-to-sqlite/workflows/Test/badge.svg)](https://circleci.com/seem/circleci-to-sqlite/actions?query=workflow%3ATest)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://circleci.com/seem/circleci-to-sqlite/blob/main/LICENSE)
+[![Changelog](https://img.shields.io/github/v/release/seem/circleci-to-sqlite?include_prereleases&label=changelog)](https://github.com/seem/circleci-to-sqlite/releases)
+[![Tests](https://github.com/seem/circleci-to-sqlite/workflows/Test/badge.svg)](https://github.com/seem/circleci-to-sqlite/actions?query=workflow%3ATest)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/seem/circleci-to-sqlite/blob/main/LICENSE)
 
 Save data from CircleCI to a SQLite database.
 
