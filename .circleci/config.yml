@@ -1,0 +1,20 @@
+version: 2.1
+
+workflows:
+  build-and-test:
+    jobs:
+      - build-and-test
+
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install packages
+          command: pip install -e '.[test]'
+      - run:
+          name: Run tests
+          command: pytest
