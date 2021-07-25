@@ -28,3 +28,23 @@ As an alternative to using an `auth.json` file you can add your access token to 
 The `projects` command retrieves all of the projects for the current user.
 
     $ circleci-to-sqlite projects circleci.db
+
+## Development
+
+To contribute to this tool, first checkout the code. Then create a new virtual environment:
+
+    cd circleci-to-sqlite
+    python -mvenv venv
+    source venv/bin/activate
+
+Or if you are using `pipenv`:
+
+    pipenv shell
+
+Now install the dependencies and tests:
+
+    pip install -e '.[test]'
+
+To run the tests:
+
+    pytest
