@@ -29,6 +29,12 @@ The `projects` command retrieves all of the projects for the current user.
 
     $ circleci-to-sqlite projects circleci.db
 
+## Fetching jobs for a project
+
+The `jobs` command retrieves all of the jobs belonging to a project. A project is specified by its slug, which has the form `{vcs_type}/{username}/{reponame}`.
+
+    $ circleci-to-sqlite jobs circleci.db github/seem/circleci-to-sqlite
+
 ## Development
 
 To contribute to this tool, first checkout the code. Then create a new virtual environment:

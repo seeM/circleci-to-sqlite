@@ -12,7 +12,7 @@ def test_projects(requests_mock):
     )
     runner = CliRunner()
     with runner.isolated_filesystem():
-        result = runner.invoke(cli, ["projects", "projects.db"])
+        result = runner.invoke(cli, ["projects", "projects.db"], catch_exceptions=False)
         assert 0 == result.exit_code
         db = sqlite_utils.Database("projects.db")
         assert {"projects"}.issubset(set(db.table_names()))

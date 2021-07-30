@@ -18,7 +18,7 @@ def test_auth():
     runner = CliRunner()
     with runner.isolated_filesystem():
         assert [] == os.listdir(".")
-        result = runner.invoke(cli, ["auth"], input="zzz")
+        result = runner.invoke(cli, ["auth"], input="zzz", catch_exceptions=False)
         assert 0 == result.exit_code
         assert ["auth.json"] == os.listdir(".")
         assert {"circleci_personal_token": "zzz"} == json.load(open("auth.json"))

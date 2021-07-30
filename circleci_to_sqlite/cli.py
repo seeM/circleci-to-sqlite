@@ -55,6 +55,29 @@ def projects(db_path, auth):
     utils.ensure_db_shape(db)
 
 
+@cli.command()
+@click.argument(
+    "db_path",
+    type=click.Path(file_okay=True, dir_okay=False, allow_dash=False),
+    required=True,
+)
+@click.argument("project_slug")
+@click.option(
+    "-a",
+    "--auth",
+    type=click.Path(file_okay=True, dir_okay=False, allow_dash=True),
+    default="auth.json",
+    help="Path to auth.json token file",
+)
+def jobs(db_path, project_slug, auth):
+    "Save all jobs belonging to a project"
+    db = sqlite_utils.Database(db_path)
+    token = load_token(auth)
+    jobs = utils.fetch_jobs(project_slug, token)
+    utils.save_jobs(db, jobs)
+    utils.ensure_db_shape(db)
+
+
 def load_token(auth):
     try:
         token = json.load(open(auth))["circleci_personal_token"]
