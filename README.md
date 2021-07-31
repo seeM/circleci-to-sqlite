@@ -23,7 +23,13 @@ This will create a file called `auth.json` in your current directory containing 
 
 As an alternative to using an `auth.json` file you can add your access token to an environment variable called `CIRCLECI_TOKEN`.
 
-## Fetching projects for the current user
+## Fetching all data for the current user
+
+The [`circleci_to_sqlite.sh`](./circleci_to_sqlite.sh) example script shows how to download _all_ data for the current user's followed projects, skipping jobs that already have steps.
+
+    $ ./circleci_to_sqlite.sh
+
+## Fetching followed projects for the current user
 
 The `projects` command retrieves all of the projects for the current user.
 
