@@ -5,6 +5,8 @@ FTS_CONFIG = {}
 
 FOREIGN_KEYS = (
     ("jobs", "project_id", "projects", "id"),
+    ("steps", "job_id", "jobs", "id"),
+    ("actions", "step_id", "steps", "id"),
 )
 
 VIEWS = {}
@@ -12,7 +14,8 @@ VIEWS = {}
 
 def make_session(token):
     session = requests.Session()
-    session.auth = requests.auth.HTTPBasicAuth(token, "")
+    if token is not None:
+        session.auth = requests.auth.HTTPBasicAuth(token, "")
     session.headers.update({"Accept": "application/json"})
     return session
 
@@ -33,10 +36,23 @@ def fetch_jobs(project_slug, token):
     return response.json()
 
 
+def fetch_steps(project_slug, build_num, token):
+    session = make_session(token)
+    vcs_type, user, repo = project_slug.split("/")
+    url = f"https://circleci.com/api/v1.1/project/{vcs_type}/{user}/{repo}/{build_num}"
+    response = session.get(url)
+    response.raise_for_status()
+    return response.json()
+
+
 def save_project(db, project):
+    to_save = {
+        key: value
+        for key, value in project.items()
+        if key in ("vcs_type", "username", "reponame", "vcs_url", "default_branch")
+    }
+
     # TODO: Make an issue: ideally this would be an upsert
-    unique_columns = ["vcs_type", "username", "reponame"]
-    # Delete existing project
     existing = list(
         db["projects"].rows_where(
             "vcs_type = ? and username = ? and reponame = ?",
@@ -45,21 +61,12 @@ def save_project(db, project):
     )
     if existing:
         project_id = existing[0]["id"]
-        to_update = {
-            key: value
-            for key, value in project.items()
-            if key not in unique_columns
-        }
-        db["projects"].update(project_id, to_update)
+        db["projects"].update(project_id, to_save).last_pk
     else:
-        to_save = {
-            key: value
-            for key, value in project.items()
-            if key in ("vcs_type", "username", "reponame", "vcs_url", "default_branch")
-        }
         project_id = db["projects"].insert(to_save, pk="id", alter=True).last_pk
+
     db["projects"].create_index(
-        unique_columns, unique=True, if_not_exists=True
+        ["vcs_type", "username", "reponame"], unique=True, if_not_exists=True
     )
     return project_id
 
@@ -69,54 +76,104 @@ def save_projects(db, projects):
         save_project(db, project)
 
 
-def save_jobs(db, jobs):
+def save_job(db, job):
     # Each job contains its project's columns. Create a project using the first job.
-    project_id = save_project(db, jobs[0])
+    project_id = save_project(db, job)
 
-    for original in jobs:
-        # Delete existing job
-        existing = list(
-            db["jobs"].rows_where(
-                "project_id = ? and build_num = ?",
-                [project_id, original["build_num"]],
-            ),
+    # Delete existing job
+    existing = list(
+        db["jobs"].rows_where(
+            "project_id = ? and build_num = ?",
+            [project_id, job["build_num"]],
+        ),
+    )
+    if existing:
+        existing_id = existing[0]["id"]
+        db["jobs"].delete_where("id = ?", [existing_id])
+
+    to_save = {
+        key: value
+        for key, value in job.items()
+        if key
+        in (
+            "build_num",
+            "build_url",
+            "branch",
+            "parallel",
+            "usage_queued_at",
+            "queued_at",
+            "start_time",
+            "stop_time",
+            "status",
+            "failed",
+            "canceled",
         )
-        if existing:
-            existing_id = existing[0]["id"]
-            db["jobs"].delete_where("id = ?", [existing_id])
-        to_save = {
-            key: value
-            for key, value in original.items()
-            if key
-            in (
-                "build_num",
-                "build_url",
-                "branch",
-                "parallel",
-                "usage_queued_at",
-                "queued_at",
-                "start_time",
-                "stop_time",
-                "status",
-                "failed",
-                "canceled",
-            )
-        }
-        to_save["user_id"] = original["user"]["id"]
-        to_save["user_name"] = original["user"]["login"]
-        to_save.update(original["workflows"])
-        to_save.pop("upstream_job_ids", None)
-        to_save.pop("upstream_concurrency_map", None)
-        to_save["project_id"] = project_id
-        db["jobs"].insert(
+    }
+    to_save["user_id"] = job["user"]["id"]
+    to_save["user_name"] = job["user"]["login"]
+    to_save.update(job["workflows"])
+    to_save.pop("upstream_job_ids", None)
+    to_save.pop("upstream_concurrency_map", None)
+    to_save["project_id"] = project_id
+    job_id = (
+        db["jobs"]
+        .insert(
             to_save,
             pk="id",
             alter=True,
             foreign_keys=[("project_id", "projects")],
         )
-        db["jobs"].create_index(
-            ["project_id", "build_num"], unique=True, if_not_exists=True
+        .last_pk
+    )
+    db["jobs"].create_index(
+        ["project_id", "build_num"], unique=True, if_not_exists=True
+    )
+    return job_id
+
+
+def save_jobs(db, jobs):
+    for job in jobs:
+        save_job(db, job)
+
+
+def save_steps(db, steps):
+    # Steps dict contains its job's columns. Create a job using that
+    job_id = save_job(db, steps)
+
+    # Delete existing steps
+    existing = list(db["steps"].rows_where("job_id = ?", [job_id]))
+    if existing:
+        existing_id = existing[0]["id"]
+        db["jobs"].delete_where("id = ?", [existing_id])
+
+    for step_index, original in enumerate(steps["steps"]):
+        step_name = original["name"]
+        step_id = (
+            db["steps"]
+            .insert(
+                {
+                    "job_id": job_id,
+                    "index": step_index,
+                    "name": step_name,
+                },
+                pk="id",
+                alter=True,
+                foreign_keys=[("job_id", "jobs")],
+            )
+            .last_pk
         )
+        db["steps"].create_index(["job_id", "index"], unique=True, if_not_exists=True)
+
+        for action in original["actions"]:
+            db["actions"].insert(
+                {"step_id": step_id, **action},
+                pk="id",
+                alter=True,
+                foreign_keys=[("step_id", "steps")],
+            )
+            db["actions"].create_index(
+                ["step_id", "index"], unique=True, if_not_exists=True
+            )
 
 
 def ensure_foreign_keys(db):

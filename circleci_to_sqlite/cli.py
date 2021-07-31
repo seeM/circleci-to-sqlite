@@ -78,6 +78,30 @@ def jobs(db_path, project_slug, auth):
     utils.ensure_db_shape(db)
 
 
+@cli.command()
+@click.argument(
+    "db_path",
+    type=click.Path(file_okay=True, dir_okay=False, allow_dash=False),
+    required=True,
+)
+@click.argument("project_slug")
+@click.argument("build_num")
+@click.option(
+    "-a",
+    "--auth",
+    type=click.Path(file_okay=True, dir_okay=False, allow_dash=True),
+    default="auth.json",
+    help="Path to auth.json token file",
+)
+def steps(db_path, project_slug, build_num, auth):
+    "Save all steps and their actions belonging to a job"
+    db = sqlite_utils.Database(db_path)
+    token = load_token(auth)
+    steps = utils.fetch_steps(project_slug, build_num, token)
+    utils.save_steps(db, steps)
+    utils.ensure_db_shape(db)
+
+
 def load_token(auth):
     try:
         token = json.load(open(auth))["circleci_personal_token"]

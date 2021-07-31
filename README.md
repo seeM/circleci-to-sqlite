@@ -35,6 +35,12 @@ The `jobs` command retrieves all of the jobs belonging to a project. A project i
 
     $ circleci-to-sqlite jobs circleci.db github/seem/circleci-to-sqlite
 
+## Fetching steps for a job
+
+The `steps` command retrieves all of the steps and their actions belonging to a job.
+
+    $ circleci-to-sqlite steps circleci.db github/seem/circleci-to-sqlite 8
+
 ## Development
 
 To contribute to this tool, first checkout the code. Then create a new virtual environment:

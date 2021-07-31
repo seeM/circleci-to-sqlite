@@ -19,8 +19,10 @@ def test_jobs(requests_mock):
             catch_exceptions=False,
         )
         assert 0 == result.exit_code
+
         db = sqlite_utils.Database("jobs.db")
-        assert {"jobs"}.issubset(set(db.table_names()))
+        assert {"projects", "jobs"}.issubset(set(db.table_names()))
+
         assert {
             ForeignKey(
                 table="jobs",
@@ -33,6 +35,7 @@ def test_jobs(requests_mock):
             (1, ("project_id", "build_num")),
             (0, ("project_id",)),
         } == {(i.unique, tuple(i.columns)) for i in db["jobs"].indexes}
+
         job_rows = list(db["jobs"].rows)
         assert [
             {

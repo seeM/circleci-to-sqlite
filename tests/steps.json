@@ -1,0 +1,272 @@
+{
+    "compare": null,
+    "previous_successful_build": {
+        "build_num": 7,
+        "status": "success",
+        "build_time_millis": 6712
+    },
+    "build_parameters": {
+        "CIRCLE_JOB": "build-and-test"
+    },
+    "oss": true,
+    "all_commit_details_truncated": false,
+    "committer_date": "2021-07-25T19:05:49.000Z",
+    "steps": [
+        {
+            "name": "Spin up environment",
+            "actions": [
+                {
+                    "truncated": false,
+                    "index": 0,
+                    "parallel": true,
+                    "failed": null,
+                    "infrastructure_fail": null,
+                    "name": "Spin up environment",
+                    "bash_command": null,
+                    "status": "success",
+                    "timedout": null,
+                    "continue": null,
+                    "end_time": "2021-07-25T19:06:03.723Z",
+                    "type": "test",
+                    "allocation_id": "60fdb6159f9e936400251553-0-build/4A6B4A04",
+                    "output_url": "https://circle-production-action-output.s3.amazonaws.com/b87bc204b47dbf5a816bdf06-60fd9d5221f8453d11154053-0-0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210731T044756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=432000&X-Amz-Credential=AKIAIJNI6FA5RIAFFQ7Q%2F20210731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=f94deade6dbd0dfe586037073730b76b0dfd7fd14b516bc0dbcf5eafc52df9eb",
+                    "start_time": "2021-07-25T19:06:00.808Z",
+                    "background": false,
+                    "exit_code": null,
+                    "insignificant": false,
+                    "canceled": null,
+                    "step": 0,
+                    "run_time_millis": 2915,
+                    "has_output": true
+                }
+            ]
+        },
+        {
+            "name": "Preparing environment variables",
+            "actions": [
+                {
+                    "truncated": false,
+                    "index": 0,
+                    "parallel": true,
+                    "failed": null,
+                    "infrastructure_fail": null,
+                    "name": "Preparing environment variables",
+                    "bash_command": null,
+                    "status": "success",
+                    "timedout": null,
+                    "continue": null,
+                    "end_time": "2021-07-25T19:06:03.920Z",
+                    "type": "test",
+                    "allocation_id": "60fdb6159f9e936400251553-0-build/4A6B4A04",
+                    "output_url": "https://circle-production-action-output.s3.amazonaws.com/2a945bb62404dfd2b16bdf06-60fd9d5221f8453d11154053-99-0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210731T044756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=432000&X-Amz-Credential=AKIAIJNI6FA5RIAFFQ7Q%2F20210731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=2851fe590e5171f48f42977615fbe48f4fbf6b676966657edff195b85fc17c88",
+                    "start_time": "2021-07-25T19:06:03.891Z",
+                    "background": false,
+                    "exit_code": null,
+                    "insignificant": false,
+                    "canceled": null,
+                    "step": 99,
+                    "run_time_millis": 29,
+                    "has_output": true
+                }
+            ]
+        },
+        {
+            "name": "Checkout code",
+            "actions": [
+                {
+                    "truncated": false,
+                    "index": 0,
+                    "parallel": true,
+                    "failed": null,
+                    "infrastructure_fail": null,
+                    "name": "Checkout code",
+                    "bash_command": "#!/bin/sh\nset -e\n\n# Workaround old docker images with incorrect $HOME\n# check https://github.com/docker/docker/issues/2968 for details\nif [ \"${HOME}\" = \"/\" ]\nthen\n  export HOME=$(getent passwd $(id -un) | cut -d: -f6)\nfi\n\necho \"Using SSH Config Dir '$SSH_CONFIG_DIR'\"\ngit --version \n\nmkdir -p \"$SSH_CONFIG_DIR\"\nchmod 0700 \"$SSH_CONFIG_DIR\"\n\nprintf \"%s\" 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==\nbitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==\n' >> \"$SSH_CONFIG_DIR/known_hosts\"\nchmod 0600 \"$SSH_CONFIG_DIR/known_hosts\"\n\nrm -f \"$SSH_CONFIG_DIR/id_rsa\"\nprintf \"%s\" \"$CHECKOUT_KEY\" > \"$SSH_CONFIG_DIR/id_rsa\"\nchmod 0600 \"$SSH_CONFIG_DIR/id_rsa\"\nif (: \"${CHECKOUT_KEY_PUBLIC?}\") 2>/dev/null; then\n  rm -f \"$SSH_CONFIG_DIR/id_rsa.pub\"\n  printf \"%s\" \"$CHECKOUT_KEY_PUBLIC\" > \"$SSH_CONFIG_DIR/id_rsa.pub\"\nfi\n\nexport GIT_SSH_COMMAND='ssh -i \"$SSH_CONFIG_DIR/id_rsa\" -o UserKnownHostsFile=\"$SSH_CONFIG_DIR/known_hosts\"'\n\n# use git+ssh instead of https\ngit config --global url.\"ssh://git@github.com\".insteadOf \"https://github.com\" || true\ngit config --global gc.auto 0 || true\n\nif [ -e '/home/circleci/project/.git' ] ; then\n  echo 'Fetching into existing repository'\n  existing_repo='true'\n  cd '/home/circleci/project'\n  git remote set-url origin \"$CIRCLE_REPOSITORY_URL\" || true\nelse\n  echo 'Cloning git repository'\n  existing_repo='false'\n  mkdir -p '/home/circleci/project'\n  cd '/home/circleci/project'\n  git clone --no-checkout \"$CIRCLE_REPOSITORY_URL\" .\nfi\n\nif [ \"$existing_repo\" = 'true' ] || [ 'false' = 'true' ]; then\n  echo 'Fetching from remote repository'\n  if [ -n \"$CIRCLE_TAG\" ]; then\n    git fetch --force --tags origin\n  else\n    git fetch --force origin '+refs/heads/main:refs/remotes/origin/main'\n  fi\nfi\n\nif [ -n \"$CIRCLE_TAG\" ]; then\n  echo 'Checking out tag'\n  git checkout --force \"$CIRCLE_TAG\"\n  git reset --hard \"$CIRCLE_SHA1\"\nelse\n  echo 'Checking out branch'\n  git checkout --force -B \"$CIRCLE_BRANCH\" \"$CIRCLE_SHA1\"\n  git --no-pager log --no-color -n 1 --format='HEAD is now at %h %s'\nfi\n",
+                    "status": "success",
+                    "timedout": null,
+                    "continue": null,
+                    "end_time": "2021-07-25T19:06:04.216Z",
+                    "type": "test",
+                    "allocation_id": "60fdb6159f9e936400251553-0-build/4A6B4A04",
+                    "output_url": "https://circle-production-action-output.s3.amazonaws.com/3a945bb62404dfd2b16bdf06-60fd9d5221f8453d11154053-101-0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210731T044756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=432000&X-Amz-Credential=AKIAIJNI6FA5RIAFFQ7Q%2F20210731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=95f1548d217113725cf7bc4101ac4f0dbc39715a310ef253cc0bd5d73e3f078e",
+                    "start_time": "2021-07-25T19:06:03.933Z",
+                    "background": false,
+                    "exit_code": null,
+                    "insignificant": false,
+                    "canceled": null,
+                    "step": 101,
+                    "run_time_millis": 283,
+                    "has_output": true
+                }
+            ]
+        },
+        {
+            "name": "Install packages",
+            "actions": [
+                {
+                    "truncated": false,
+                    "index": 0,
+                    "parallel": true,
+                    "failed": null,
+                    "infrastructure_fail": null,
+                    "name": "Install packages",
+                    "bash_command": "#!/bin/bash -eo pipefail\npip install -e '.[test]'",
+                    "status": "success",
+                    "timedout": null,
+                    "continue": null,
+                    "end_time": "2021-07-25T19:06:09.506Z",
+                    "type": "test",
+                    "allocation_id": "60fdb6159f9e936400251553-0-build/4A6B4A04",
+                    "output_url": "https://circle-production-action-output.s3.amazonaws.com/4a945bb62404dfd2c16bdf06-60fd9d5221f8453d11154053-102-0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210731T044756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=432000&X-Amz-Credential=AKIAIJNI6FA5RIAFFQ7Q%2F20210731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=9f32acf0ea0257d4fb3783e960a6fb6b18ccfe7e78cfcc1674e147aebf3bd5b4",
+                    "start_time": "2021-07-25T19:06:04.226Z",
+                    "background": false,
+                    "exit_code": 0,
+                    "insignificant": false,
+                    "canceled": null,
+                    "step": 102,
+                    "run_time_millis": 5280,
+                    "has_output": true
+                }
+            ]
+        },
+        {
+            "name": "Run tests",
+            "actions": [
+                {
+                    "truncated": false,
+                    "index": 0,
+                    "parallel": true,
+                    "failed": null,
+                    "infrastructure_fail": null,
+                    "name": "Run tests",
+                    "bash_command": "#!/bin/bash -eo pipefail\npytest",
+                    "status": "success",
+                    "timedout": null,
+                    "continue": null,
+                    "end_time": "2021-07-25T19:06:10.015Z",
+                    "type": "test",
+                    "allocation_id": "60fdb6159f9e936400251553-0-build/4A6B4A04",
+                    "output_url": "https://circle-production-action-output.s3.amazonaws.com/5a72483276c61940126bdf06-60fd9d5221f8453d11154053-103-0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210731T044756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=432000&X-Amz-Credential=AKIAIJNI6FA5RIAFFQ7Q%2F20210731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=1f949dce99c983fef7387cb2f89da93eb1a64081250a80595cb29124fa1d5783",
+                    "start_time": "2021-07-25T19:06:09.514Z",
+                    "background": false,
+                    "exit_code": 0,
+                    "insignificant": false,
+                    "canceled": null,
+                    "step": 103,
+                    "run_time_millis": 501,
+                    "has_output": true
+                }
+            ]
+        }
+    ],
+    "body": "",
+    "usage_queued_at": "2021-07-25T19:05:57.081Z",
+    "context_ids": [],
+    "fail_reason": null,
+    "retry_of": null,
+    "reponame": "circleci-to-sqlite",
+    "ssh_users": [],
+    "build_url": "https://circleci.com/gh/seeM/circleci-to-sqlite/8",
+    "parallel": 1,
+    "failed": false,
+    "branch": "main",
+    "username": "seeM",
+    "author_date": "2021-07-25T19:05:49.000Z",
+    "why": "github",
+    "user": {
+        "is_user": true,
+        "login": "seeM",
+        "avatar_url": "https://avatars.githubusercontent.com/u/559360?v=4",
+        "name": "Wasim Lorgat",
+        "vcs_type": "github",
+        "id": 559360
+    },
+    "vcs_revision": "35edfe73ef6a62544017c03fb1dad668796c5660",
+    "workflows": {
+        "job_name": "build-and-test",
+        "job_id": "49b34cdd-748a-48ae-b989-c879daa046bc",
+        "workflow_id": "0ae884c6-d352-4f4d-9591-92902d6c78fe",
+        "workspace_id": "0ae884c6-d352-4f4d-9591-92902d6c78fe",
+        "upstream_job_ids": [],
+        "upstream_concurrency_map": {},
+        "workflow_name": "build-and-test"
+    },
+    "owners": [
+        "seeM"
+    ],
+    "vcs_tag": null,
+    "pull_requests": [],
+    "build_num": 8,
+    "infrastructure_fail": false,
+    "committer_email": "mwlorgat@gmail.com",
+    "has_artifacts": true,
+    "previous": {
+        "build_num": 7,
+        "status": "success",
+        "build_time_millis": 6712
+    },
+    "status": "success",
+    "committer_name": "seem",
+    "retries": null,
+    "subject": "Add development section to readme",
+    "vcs_type": "github",
+    "timedout": false,
+    "dont_build": null,
+    "lifecycle": "finished",
+    "no_dependency_cache": false,
+    "stop_time": "2021-07-25T19:06:10.095Z",
+    "ssh_disabled": true,
+    "build_time_millis": 9335,
+    "picard": {
+        "build_agent": {
+            "image": "1.0.79020-7b308f28",
+            "properties": {
+                "availability_zone": "us-east-1d",
+                "instance_id": "i-034c2573e8488760a",
+                "instance_ip": "172.29.111.170",
+                "build_agent": "1.0.79020-7b308f28",
+                "executor": "docker",
+                "nomad_ami": "ami-07a91dd31495beac0"
+            }
+        },
+        "executor": "docker",
+        "resource_class": {
+            "cpu": 2.0,
+            "ram": 4096,
+            "class": "medium",
+            "name": "Docker Medium"
+        }
+    },
+    "circle_yml": {
+        "string": "version: 2\njobs:\n  build-and-test:\n    docker:\n    - image: cimg/python:3.8\n    steps:\n    - checkout\n    - run:\n        name: Install packages\n        command: pip install -e '.[test]'\n    - run:\n        name: Run tests\n        command: pytest\nworkflows:\n  build-and-test:\n    jobs:\n    - build-and-test\n  version: 2\n\n# Original config.yml file:\n# version: 2.1\n# \n# workflows:\n#   build-and-test:\n#     jobs:\n#       - build-and-test\n# \n# \n# jobs:\n#   build-and-test:\n#     docker:\n#       - image: cimg/python:3.8\n#     steps:\n#       - checkout\n#       - run:\n#           name: Install packages\n#           command: pip install -e '.[test]'\n#       - run:\n#           name: Run tests\n#           command: pytest"
+    },
+    "messages": [],
+    "is_first_green_build": false,
+    "job_name": null,
+    "start_time": "2021-07-25T19:06:00.760Z",
+    "canceler": null,
+    "all_commit_details": [
+        {
+            "committer_date": "2021-07-25T19:05:49.000Z",
+            "body": "",
+            "branch": "main",
+            "author_date": "2021-07-25T19:05:49.000Z",
+            "committer_email": "mwlorgat@gmail.com",
+            "commit": "35edfe73ef6a62544017c03fb1dad668796c5660",
+            "committer_login": "seeM",
+            "committer_name": "seem",
+            "subject": "Add development section to readme",
+            "commit_url": "https://github.com/seeM/circleci-to-sqlite/commit/35edfe73ef6a62544017c03fb1dad668796c5660",
+            "author_login": "seeM",
+            "author_name": "seem",
+            "author_email": "mwlorgat@gmail.com"
+        }
+    ],
+    "platform": "2.0",
+    "outcome": "success",
+    "vcs_url": "https://github.com/seeM/circleci-to-sqlite",
+    "author_name": "seem",
+    "node": null,
+    "queued_at": "2021-07-25T19:05:57.124Z",
+    "canceled": false,
+    "author_email": "mwlorgat@gmail.com"
+}
