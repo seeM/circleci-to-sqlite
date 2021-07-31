@@ -80,17 +80,6 @@ def save_job(db, job):
     # Each job contains its project's columns. Create a project using the first job.
     project_id = save_project(db, job)
 
-    # Delete existing job
-    existing = list(
-        db["jobs"].rows_where(
-            "project_id = ? and build_num = ?",
-            [project_id, job["build_num"]],
-        ),
-    )
-    if existing:
-        existing_id = existing[0]["id"]
-        db["jobs"].delete_where("id = ?", [existing_id])
-
     to_save = {
         key: value
         for key, value in job.items()
@@ -115,16 +104,28 @@ def save_job(db, job):
     to_save.pop("upstream_job_ids", None)
     to_save.pop("upstream_concurrency_map", None)
     to_save["project_id"] = project_id
-    job_id = (
-        db["jobs"]
-        .insert(
-            to_save,
-            pk="id",
-            alter=True,
-            foreign_keys=[("project_id", "projects")],
-        )
-        .last_pk
+
+    existing = list(
+        db["jobs"].rows_where(
+            "project_id = ? and build_num = ?",
+            [project_id, job["build_num"]],
+        ),
     )
+    if existing:
+        job_id = existing[0]["id"]
+        db["jobs"].update(job_id, to_save).last_pk
+    else:
+        job_id = (
+            db["jobs"]
+            .insert(
+                to_save,
+                pk="id",
+                alter=True,
+                foreign_keys=[("project_id", "projects")],
+            )
+            .last_pk
+        )
+
     db["jobs"].create_index(
         ["project_id", "build_num"], unique=True, if_not_exists=True
     )
@@ -140,11 +141,13 @@ def save_steps(db, steps):
     # Steps dict contains its job's columns. Create a job using that
     job_id = save_job(db, steps)
 
-    # Delete existing steps
+    # Delete existing steps and actions
     existing = list(db["steps"].rows_where("job_id = ?", [job_id]))
     if existing:
-        existing_id = existing[0]["id"]
-        db["jobs"].delete_where("id = ?", [existing_id])
+        db["actions"].delete_where(
+            "step_id in (select id from steps where job_id = ?)", [job_id]
+        )
+        db["steps"].delete_where("job_id = ?", [job_id])
 
     for step_index, original in enumerate(steps["steps"]):
         step_name = original["name"]
