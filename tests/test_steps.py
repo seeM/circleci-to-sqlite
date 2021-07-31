@@ -46,7 +46,6 @@ def test_steps(requests_mock):
             ),
         } == set(db["actions"].foreign_keys)
         assert {
-            (1, ("step_id", "index")),
             (0, ("step_id",)),
         } == {(i.unique, tuple(i.columns)) for i in db["actions"].indexes}
 

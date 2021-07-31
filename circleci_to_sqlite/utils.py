@@ -171,9 +171,6 @@ def save_steps(db, steps):
                 alter=True,
                 foreign_keys=[("step_id", "steps")],
             )
-            db["actions"].create_index(
-                ["step_id", "index"], unique=True, if_not_exists=True
-            )
 
 
 def ensure_foreign_keys(db):
