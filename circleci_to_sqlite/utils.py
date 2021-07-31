@@ -109,7 +109,7 @@ def save_job(db, job):
             "canceled",
         )
     }
-    to_save["user_id"] = job["user"]["id"]
+    to_save["user_id"] = job["user"].get("id")
     to_save["user_name"] = job["user"]["login"]
     to_save.update(job["workflows"])
     to_save.pop("upstream_job_ids", None)
